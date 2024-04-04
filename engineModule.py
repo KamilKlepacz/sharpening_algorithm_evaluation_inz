@@ -32,10 +32,11 @@ def evaluate_c(op, pil, hist, open_cv_sharpen, pillow_sharpen, hist_eq_enchanced
     elif hist.c_crit > pil.c_crit and hist.c_crit > pil.c_crit:
         print("histogram equalization was the best with score " + str(hist.c_crit))
 
-def evaluate_hqi(op, pil, hist, open_cv_sharpen, pillow_sharpen, hist_eq_enchanced):
-    op.criteria_HQI(open_cv_sharpen)
-    pil.criteria_HQI(pillow_sharpen)
-    hist.criteria_HQI(hist_eq_enchanced)
+
+def evaluate_hqi(op, pil, hist):
+    op.criteria_HQI()
+    pil.criteria_HQI()
+    hist.criteria_HQI()
     # evaluate best algoritm
     if op.hqi_crit > pil.hqi_crit and op.hqi_crit > hist.hqi_crit:
         print("open cv was the best with score " + str(op.hqi_crit))

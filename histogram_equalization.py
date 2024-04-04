@@ -5,6 +5,7 @@ import numpy as np
 from criteria_modules.ColorHistogramModule import colors_difference
 from criteria_modules.EdgeDetectionModule import edge_detection, edge_wideness, edge_difference
 from criteria_modules.HistogramQualityIndexModule import count_quality_index
+from helpers import blur_the_image
 
 
 class HistogramEqualization:
@@ -20,6 +21,9 @@ class HistogramEqualization:
         img[:, :, 0] = clahe.apply(img[:, :, 0]) + 30
         sharpened = cv2.cvtColor(img, cv2.COLOR_HSV2BGR)
         return sharpened
+
+    def change_value_of_an_image(self, img):
+        self.image = img
 
     def criteria_ed(self, sharpened_img):
         edges_before = edge_detection(self.image)
@@ -38,6 +42,7 @@ class HistogramEqualization:
                 print("Image got enchanced by histogram equalization. Value of sharpened image is "
                       +  str(abs(total_diff)) + "% wider than original which indicates it "
                                           "didn't sharpened")
+                return total_diff
 
         else:
             print("something went wrong in edge detection criteria for histogram equalization")
@@ -48,15 +53,19 @@ class HistogramEqualization:
         total_diff, worked = colors_difference(self.image, sharpened_img)
         self.c_crit = total_diff
         if worked:
-            print("Image got enchanced by histogram equalization. Edge detection criteria detected "
+            print("Image got enchanced by histogram equalization. Unique color criteria detected "
                   + str(total_diff) + " more unique colours from the original picture.")
             return total_diff
         else:
             print("value of sharpened image is " + str(total_diff) + "less unique colours from the original picture"
                                                                      "which indicates it didn't got sharpened")
 
-    def criteria_HQI(self, sharpened_img):
-        index_of_quality = count_quality_index(self.image, sharpened_img)
+    def criteria_HQI(self):
+        origin = self.image
+        blured = blur_the_image(self.image)
+        self.change_value_of_an_image(blured)
+        sharpened = self.hist_enchance()
+        index_of_quality = count_quality_index(origin, sharpened)
         print("Image got enchanced by histogram equalization and got "
               + str(index_of_quality) + " score by index of quality based on histogram.")
         self.hqi_crit = index_of_quality

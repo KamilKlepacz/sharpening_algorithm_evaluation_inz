@@ -7,6 +7,7 @@ import numpy
 
 
 def edge_detection(testing_image):
+    cv2.imwrite('EdgeDetectionExample.jpg', testing_image)
     # Convert to graycsale
     img_gray = cv2.cvtColor(testing_image, cv2.COLOR_BGR2GRAY)
     # Blur the image for better edge detection

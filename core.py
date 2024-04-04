@@ -3,19 +3,17 @@ from histogram_equalization import HistogramEqualization
 from openCV import OpenCVSharpen
 from pillow import PillowSharpen
 
-path = 'C:\\Users\\kamil\\Desktop\\test.jpg'
-
 pil = PillowSharpen()
 op = OpenCVSharpen()
 hist_eq = HistogramEqualization()
-pil.path = path
-op.path = path
-hist_eq.path = path
+# pil.path = path
+# op.path = path
+# hist_eq.path = path
 
 os, ps, hs = sharpen_all(op, pil, hist_eq)
 evaluate_ed(op, pil, hist_eq, os, ps, hs)
 evaluate_c(op, pil, hist_eq, os, ps, hs)
-evaluate_hqi(op, pil, hist_eq, os, ps, hs)
+evaluate_hqi(op, pil, hist_eq)
 
 
 
