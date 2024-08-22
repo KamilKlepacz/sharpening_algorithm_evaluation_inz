@@ -1,18 +1,15 @@
 # ---------------------------------------edge_detection-----------------------------------------------------------------
-# Edge detection function which does basically same thing as its name shows
+# Edge detection function
 from itertools import chain
 
 import cv2
 import numpy
 
-
+#Function based on tutorial from link: https://learnopencv.com/edge-detection-using-opencv/
 def edge_detection(testing_image):
     cv2.imwrite('EdgeDetectionExample.jpg', testing_image)
-    # Convert to graycsale
     img_gray = cv2.cvtColor(testing_image, cv2.COLOR_BGR2GRAY)
-    # Blur the image for better edge detection
     img_blur = cv2.GaussianBlur(img_gray, (3, 3), 0)
-    # Canny Edge Detection
     edges = cv2.Canny(image=img_blur, threshold1=100, threshold2=200)
 
     return edges
@@ -35,6 +32,9 @@ def edge_wideness(edge_detected_image):
             if flatten_list[0][0] == 255:
                 val_of_white = flatten_list[1][0]
         flag_test = True
+    else:
+        if flatten_list[0][0] == 0:
+            val_of_black = flatten_list[1][0]
 
     fullsize = val_of_black + val_of_white
     whitepct = (val_of_white / fullsize) * 100

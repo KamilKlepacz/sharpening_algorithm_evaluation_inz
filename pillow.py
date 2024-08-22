@@ -1,26 +1,37 @@
+import cv2
 import numpy
 from PIL import Image
 from PIL import ImageFilter
 
-from criteria_modules.ColorHistogramModule import colors_difference
+from criteria_modules.UniqueColorModule import colors_difference
 from criteria_modules.EdgeDetectionModule import edge_detection, edge_wideness, edge_difference
 from criteria_modules.HistogramQualityIndexModule import count_quality_index
 from helpers import blur_the_image
 
 
 class PillowSharpen:
-    path = 'C:\\Users\\kamil\\Desktop\\archiwum.jpg'
-    imageObject = Image.open(path)
-    imageObjnp = numpy.array(imageObject)
-    ed_crit = None
-    c_crit = None
-    hqi_crit = None
+    def __init__(self, path):
+        self.imageObject = Image.open(path)
+        self.imageObjnp = numpy.array(self.imageObject)
+        self.ed_crit = None
+        self.c_crit = None
+        self.hqi_crit = None
 
     def show_image(self):
         self.imageObject.show()
 
     def change_value_of_an_image(self, image):
         self.imageObject = image
+
+    def clear_object(self, path):
+        self.imageObject = Image.open(path)
+        self.imageObjnp = numpy.array(self.imageObject)
+        self.ed_crit = None
+        self.c_crit = None
+        self.hqi_crit = None
+
+    def save_image(self, image):
+        cv2.imwrite('sharpimage_pil.jpg', image)
 
     def sharpen_image(self):
         sharpened = self.imageObject.filter(ImageFilter.SHARPEN)
@@ -48,7 +59,9 @@ class PillowSharpen:
 
         else:
             print("something went wrong in edge detection criteria for Pillow sharpened image")
-            pass
+            total_diff, worked = edge_difference(wpct_b, wpct_a)
+            self.ed_crit = total_diff
+            return total_diff
 
     def criteria_ch(self, sharpened_img):
         worked = False

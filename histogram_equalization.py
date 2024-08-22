@@ -2,18 +2,18 @@ import cv2
 import numpy
 import numpy as np
 
-from criteria_modules.ColorHistogramModule import colors_difference
+from criteria_modules.UniqueColorModule import colors_difference
 from criteria_modules.EdgeDetectionModule import edge_detection, edge_wideness, edge_difference
 from criteria_modules.HistogramQualityIndexModule import count_quality_index
 from helpers import blur_the_image
 
 
 class HistogramEqualization:
-    path = 'C:\\Users\\kamil\\Desktop\\archiwum.jpg'
-    image = cv2.imread(path)
-    ed_crit = None
-    c_crit = None
-    hqi_crit = None
+    def __init__(self, path):
+        self.image = cv2.imread(path)
+        self.ed_crit = None
+        self.c_crit = None
+        self.hqi_crit = None
 
     def hist_enchance(self):
         img = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
@@ -24,6 +24,15 @@ class HistogramEqualization:
 
     def change_value_of_an_image(self, img):
         self.image = img
+
+    def save_image(self, image):
+        cv2.imwrite('sharpimage_he.jpg', image)
+
+    def clear_object(self, path):
+        self.image = cv2.imread(path)
+        self.ed_crit = None
+        self.c_crit = None
+        self.hqi_crit = None
 
     def criteria_ed(self, sharpened_img):
         edges_before = edge_detection(self.image)
@@ -46,7 +55,9 @@ class HistogramEqualization:
 
         else:
             print("something went wrong in edge detection criteria for histogram equalization")
-            pass
+            total_diff, worked = edge_difference(wpct_b, wpct_a)
+            self.ed_crit = total_diff
+            return total_diff
 
     def criteria_ch(self, sharpened_img):
         worked = False
